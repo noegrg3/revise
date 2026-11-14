@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lingo Noé – Anglais & Allemand jusqu’à B2</title>
+<style>
+:root{--bg:#f6f5ff;--card:#fff;--tx:#1d1b2e;--mut:#6b6882;--pri:#6c4cf1;--pri2:#ff6bb5;--ok:#17a673;--ko:#e5484d;--bd:#e4e1f5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13111f;--card:#1e1b30;--tx:#f0eefc;--mut:#9d98bd;--bd:#322e4d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#13111f;--card:#1e1b30;--tx:#f0eefc;--mut:#9d98bd;--bd:#322e4d;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+.wrap{max-width:860px;margin:auto;padding:16px 14px 90px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:1.4rem;margin:0;background:linear-gradient(90deg,var(--pri),var(--pri2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.seg{display:flex;background:var(--card);border:1px solid var(--bd);border-radius:99px;padding:3px}
+.seg button{border:0;background:none;color:var(--tx);padding:7px 14px;border-radius:99px;font-weight:600;cursor:pointer}
+.seg button.on{background:var(--pri);color:#fff}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:4px;background:var(--card);border-top:1px solid var(--bd);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:5}
+nav button{flex:1;max-width:130px;border:0;background:none;color:var(--mut);font-size:.72rem;padding:6px 2px;border-radius:12px;cursor:pointer}
+nav button b{display:block;font-size:1.3rem}nav button.on{color:var(--pri);background:var(--bg)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:16px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat{text-align:center}.stat b{display:block;font-size:1.7rem}.stat span{color:var(--mut);font-size:.8rem}
+.btn{border:0;border-radius:14px;padding:11px 18px;font-weight:700;cursor:pointer;background:var(--pri);color:#fff;font-size:1rem}
+.btn.g{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}.btn.ok{background:var(--ok)}.btn.ko{background:var(--ko)}
+.fc{min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;gap:6px;background:linear-gradient(135deg,var(--card),var(--bg))}
+.fc .em{font-size:5.5rem;line-height:1}.fc .w{font-size:1.9rem;font-weight:800}.fc small{color:var(--mut)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.bar{height:9px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2))}
+.th{display:flex;align-items:center;gap:12px;cursor:pointer}.th .e{font-size:2rem}.th.lock{opacity:.5}
+.tag{font-size:.7rem;font-weight:700;background:var(--pri);color:#fff;border-radius:99px;padding:2px 9px}
+textarea,input,select{width:100%;padding:11px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{background:var(--bg);border:1px solid var(--bd);border-radius:12px;text-align:center;padding:8px 2px;font-size:.75rem}
+.day b{display:block;font-size:1.2rem;color:var(--pri)}.day.t{border-color:var(--pri);border-width:2px}
+.chart{display:flex;align-items:flex-end;gap:4px;height:90px}.chart div{flex:1;background:linear-gradient(var(--pri2),var(--pri));border-radius:5px 5px 0 0;min-height:3px}
+.ai{white-space:pre-wrap;background:var(--bg);border-radius:12px;padding:12px;margin-top:10px;border:1px dashed var(--pri)}
+.mut{color:var(--mut)}h2{margin:4px 0 10px;font-size:1.15rem}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><div class="wrap">
+<header><h1>🚀 Lingo Noé</h1>
+<div class="seg"><button id="l-en" onclick="setLang('en')">🇬🇧 English</button><button id="l-de" onclick="setLang('de')">🇩🇪 Deutsch</button></div></header>
+<main id="v"></main></div>
+<nav id="nav"></nav>
+<script>
+const BASE=[ // [niveau, nom, emoji, [[emoji, fr, en, de],...]]
+["A1","Salutations","👋",[["👋","bonjour","hello","Hallo"],["🚪","au revoir","goodbye","Auf Wiedersehen"],["🙏","merci","thank you","Danke"],["🤲","s’il vous plaît","please","Bitte"],["🙇","excusez-moi","sorry","Entschuldigung"],["✅","oui","yes","Ja"]]],
+["A1","Nourriture","🍎",[["🍎","la pomme","apple","der Apfel"],["🍞","le pain","bread","das Brot"],["🧀","le fromage","cheese","der Käse"],["💧","l’eau","water","das Wasser"],["🥛","le lait","milk","die Milch"],["🍗","le poulet","chicken","das Hähnchen"]]],
+["A1","Animaux","🐶",[["🐶","le chien","dog","der Hund"],["🐱","le chat","cat","die Katze"],["🐦","l’oiseau","bird","der Vogel"],["🐴","le cheval","horse","das Pferd"],["🐟","le poisson","fish","der Fisch"],["🐰","le lapin","rabbit","das Kaninchen"]]],
+["A2","Voyage","✈️",[["✈️","l’avion","plane","das Flugzeug"],["🧳","la valise","suitcase","der Koffer"],["🎫","le billet","ticket","die Fahrkarte"],["🚉","la gare","station","der Bahnhof"],["🏨","l’hôtel","hotel","das Hotel"],["🗺️","la carte","map","die Karte"]]],
+["A2","Maison","🏠",[["🏠","la maison","house","das Haus"],["🪟","la fenêtre","window","das Fenster"],["🔑","la clé","key","der Schlüssel"],["🍳","la cuisine","kitchen","die Küche"],["🛏️","le lit","bed","das Bett"],["🚪","la porte","door","die Tür"]]],
+["A2","Vêtements","👕",[["👕","le t-shirt","T-shirt","das T-Shirt"],["👖","le pantalon","trousers","die Hose"],["👟","les chaussures","shoes","die Schuhe"],["🧥","le manteau","coat","der Mantel"],["👗","la robe","dress","das Kleid"],["🎩","le chapeau","hat","der Hut"]]],
+["B1","Travail","💼",[["🤝","la réunion","meeting","die Besprechung"],["💶","le salaire","salary","das Gehalt"],["🧑‍💼","l’entretien d’embauche","job interview","das Vorstellungsgespräch"],["⏰","l’échéance","deadline","die Frist"],["🧑‍🤝‍🧑","le collègue","colleague","der Kollege"],["💻","l’ordinateur","computer","der Computer"]]],
+["B1","Santé","🩺",[["🩺","le médecin","doctor","der Arzt"],["🤕","la douleur","pain","der Schmerz"],["💊","le médicament","medicine","das Medikament"],["📝","l’ordonnance","prescription","das Rezept"],["🌡️","la fièvre","fever","das Fieber"],["🏥","l’hôpital","hospital","das Krankenhaus"]]],
+["B2","Société","🌍",[["🌱","l’environnement","environment","die Umwelt"],["🏛️","le gouvernement","government","die Regierung"],["⚖️","l’inégalité","inequality","die Ungleichheit"],["🧗","le défi","challenge","die Herausforderung"],["♻️","durable","sustainable","nachhaltig"],["🗣️","le débat","debate","die Debatte"]]],
+["B2","Technologie","🤖",[["🤖","l’intelligence artificielle","artificial intelligence","die künstliche Intelligenz"],["🔒","la cybersécurité","cybersecurity","die Cybersicherheit"],["🧮","l’algorithme","algorithm","der Algorithmus"],["📊","les données","data","die Daten"],["🔄","la mise à jour","update","das Update"],["🌐","le réseau","network","das Netzwerk"]]]];
+let T=[...BASE],sb=null,user=null,pt=null;const INT=[0,1,3,7,14,30], LN={en:"anglais",de:"allemand"}, SPK={en:"en-US",de:"de-DE"};
+let S={lang:"en",cards:{},log:[],custom:[],goal:20,mode:"flip",level:null,theme:null,tab:"home"}, Q=[], cur=null, flip=false, sample=null;
+try{Object.assign(S,JSON.parse(localStorage.getItem("lingo")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("lingo",JSON.stringify(S))}catch(e){}try{push()}catch(e){}};
+function rebuildT(){T=[...BASE,...S.custom.map(l=>[l.level,l.name,l.emoji,l.cards.map(c=>[c.emoji||l.emoji,c.fr,c.en,c.de,c.img||""]),"c"+l.id])]}
+rebuildT();
+const PROMPT=`Tu es un assistant qui crée des listes de flashcards pour apprendre l’anglais et l’allemand (de A1 à B2).
+Sujet : [SUJET]
+Niveau : [A1, A2, B1 ou B2]
+Nombre de cartes : [NOMBRE]
+
+Pour chaque carte, donne : le français, l’anglais, l’allemand (avec l’article der/die/das pour les noms), un emoji et un lien d’image.
+Pour l’image : utilise la recherche web et donne un lien DIRECT vers un fichier image (https, qui finit par .jpg, .png ou .webp), de préférence libre de droits (upload.wikimedia.org, Pexels, Unsplash). N’invente JAMAIS un lien : si tu n’en trouves pas de vrai, mets "".
+
+Réponds UNIQUEMENT avec du JSON valide, sans texte autour et sans balises markdown, exactement dans ce format :
+{"name":"Nom de la liste","level":"B1","emoji":"🍽️","cards":[{"fr":"l’addition","en":"the bill","de":"die Rechnung","emoji":"🧾","img":"https://upload.wikimedia.org/…/image.jpg"}]}`;
+const SB_URL="https://wejnfzmvsbvyejcplpbp.supabase.co",SB_KEY="sb_publishable_o5RDc7EWu63yU72jWbqTKg_GEkZZ97j";
+try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
+async function initAuth(){if(!sb)return;const{data}=await sb.auth.getSession();user=data.session?data.session.user:null;
+ sb.auth.onAuthStateChange((_e,se)=>{user=se?se.user:null;if(user)pull();render()});if(user)pull()}
+async function pull(){const{data}=await sb.from("user_state").select("data").eq("user_id",user.id).maybeSingle();
+ if(data&&data.data&&Object.keys(data.data).length){Object.assign(S,data.data,{tab:S.tab});rebuildT();try{localStorage.setItem("lingo",JSON.stringify(S))}catch(e){}build();render()}else push()}
+function push(){clearTimeout(pt);pt=setTimeout(async()=>{if(!sb||!user)return;await sb.from("user_state").upsert({user_id:user.id,data:S,updated_at:new Date().toISOString()})},1500)}
+async function auth(up){const e=$("em").value,p=$("pw").value;const{error}=up?await sb.auth.signUp({email:e,password:p}):await sb.auth.signInWithPassword({email:e,password:p});
+ if(error)alert(error.message);else if(up)alert("Compte créé ! Vérifie tes emails si une confirmation est demandée.")}
+function acct(){return`<div class="card"><h2>☁️ Compte & sauvegarde</h2>${user?`<p>Connecté : <b>${user.email}</b> — progression synchronisée sur tous tes appareils.</p><div class="row"><button class="btn g" onclick="sb.auth.signOut()">Déconnexion</button></div>`:(sb?`<input id="em" type="email" placeholder="Email" style="margin-bottom:8px"><input id="pw" type="password" placeholder="Mot de passe (6 caractères min.)"><div class="row"><button class="btn" onclick="auth(0)">Connexion</button><button class="btn g" onclick="auth(1)">Créer un compte</button></div>`:`<p class="mut">Supabase indisponible.</p>`)}<div class="row"><button class="btn g" onclick="exp()">💾 Exporter</button><label class="btn g">📂 Importer<input type="file" accept="application/json" hidden onchange="imp2(this.files[0])"></label></div></div>`}
+function exp(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:"application/json"}));a.download="lingo-sauvegarde.json";a.click()}
+function imp2(f){const r=new FileReader();r.onload=()=>{try{Object.assign(S,JSON.parse(r.result));rebuildT();save();build();render()}catch(e){alert("Fichier invalide")}};r.readAsText(f)}
+function chk(){const x=T[cur[0]][3][cur[1]],tr=x[S.lang==="en"?2:3];const n=t=>t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/^(der|die|das|the|a|an) /,"").replace(/[^a-z0-9ß ]/g,"").trim();flip=true;S.last=n($("ty").value)===n(tr);render()}
+const clean=s=>String(s||"").replace(/[<>"&]/g,"").trim().slice(0,80);
+function copyP(){const t=$("pr");t.select();try{navigator.clipboard.writeText(t.value)}catch(e){}try{document.execCommand("copy")}catch(e){}$("cp").textContent="✅ Copié !"}
+function importList(){const o=$("impo");try{const raw=$("imp").value.trim().replace(/```json|```/g,"").trim();const d=JSON.parse(raw),ls=Array.isArray(d)?d:[d];let n=0;
+ ls.forEach(l=>{if(!l.name||!Array.isArray(l.cards))throw 0;const cards=l.cards.filter(c=>c.fr&&(c.en||c.de)).map(c=>({fr:clean(c.fr),en:clean(c.en||c.de),de:clean(c.de||c.en),emoji:clean(c.emoji).replace(/'/g,""),img:/^https:\/\/[^\s"'<>]+$/.test(c.img||"")?c.img:""}));
+  S.custom.push({id:Date.now()+Math.floor(Math.random()*999),name:clean(l.name),level:["A1","A2","B1","B2"].includes(l.level)?l.level:"A1",emoji:clean(l.emoji).replace(/'/g,"")||"📚",cards});n+=cards.length});
+ rebuildT();save();render();$("impo").textContent="✅ "+n+" cartes importées !"}catch(e){o.textContent="❌ JSON invalide : colle uniquement la réponse JSON de l’IA."}}
+function delList(id){if(!confirm("Supprimer cette liste ?"))return;S.custom=S.custom.filter(l=>l.id!==id);S.theme=null;rebuildT();save();render()}
+async function genList(){const o=$("impo"),s=$("sj").value.trim();if(!s){o.textContent="Indique un sujet.";return}if(!sample){o.textContent="IA indisponible ici.";return}o.textContent="Génération…";
+ try{const r=await sample(`Crée 15 flashcards sur « ${s} » niveau ${$("lv2").value} pour un francophone. Réponds UNIQUEMENT en JSON valide sans markdown : {"name":"...","level":"${$("lv2").value}","emoji":"...","cards":[{"fr":"...","en":"...","de":"... (avec der/die/das)","emoji":"...","img":""}]}`,{cache:false});$("imp").value=r.text.replace(/```json|```/g,"").trim();o.textContent="Vérifie puis clique sur Importer."}catch(e){o.textContent="Erreur, réessaie."}}
+const iso=d=>d.toISOString().slice(0,10), today=()=>iso(new Date());
+const add=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const key=(t,w)=>S.lang+(T[t][4]||t)+"_"+w, C=(t,w)=>S.cards[key(t,w)];
+const $=id=>document.getElementById(id);
+function themeProg(t){const n=T[t][3].length;let k=0,m=0;T[t][3].forEach((_,w)=>{const c=C(t,w);if(c){k++;if(c.b>=3)m++}});return{k,m,n}}
+const unlocked=t=>T[t][4]||t===0||themeProg(t-1).k>=Math.ceil(T[t-1][3].length/2);
+function build(){Q=[];const t0=S.theme;
+ T.forEach((th,t)=>{if(t0!==null&&t0!==t||!unlocked(t)||S.level&&t0===null&&T[t][0]!==S.level)return;
+  th[3].forEach((_,w)=>{const c=C(t,w);if(!c||c.d<=today())Q.push([t,w])})});
+ Q.sort(()=>Math.random()-.5);Q.sort((a,b)=>(C(...a)?0:1)-(C(...b)?0:1));next()}
+function next(){cur=Q.shift()||null;flip=false}
+function answer(ok){const[t,w]=cur,k=key(t,w),c=S.cards[k]||{b:-1,d:today()};
+ c.b=ok?Math.min(c.b+1,5):0;if(c.b<0)c.b=0;c.d=ok?add(INT[c.b]===0?1:INT[c.b]):today();
+ // J0 : la 1re réussite planifie J1 ; ensuite J3, J7, J14, J30
+ if(ok&&c.b===0)c.b=1;S.cards[k]=c;S.log.push({d:today(),ok:ok?1:0});
+ if(!ok)Q.push(cur);next();save();render()}
+function speak(){if(!cur||!window.speechSynthesis)return;const w=T[cur[0]][3][cur[1]][S.lang==="en"?2:3];
+ const u=new SpeechSynthesisUtterance(w.replace(/^(der|die|das) /,"$1 "));u.lang=SPK[S.lang];speechSynthesis.speak(u)}
+function streak(){const ds=new Set(S.log.map(l=>l.d));let n=0,i=0;if(!ds.has(today()))i=1;while(ds.has(add(-i))){n++;i++}return n}
+function setLang(l){S.lang=l;S.theme=null;save();build();render()}
+function go(t){S.tab=t;if(t==="cards")build();render()}
+const views={
+home(){const tot=Object.keys(S.cards).filter(k=>k.startsWith(S.lang)).length,
+ mas=Object.entries(S.cards).filter(([k,c])=>k.startsWith(S.lang)&&c.b>=5).length,
+ due=Object.entries(S.cards).filter(([k,c])=>k.startsWith(S.lang)&&c.d<=today()).length,
+ L=S.log.filter(l=>l.d===today()).length,all=S.log.length,ok=S.log.filter(l=>l.ok).length;
+ const days=[...Array(14)].map((_,i)=>{const d=add(i-13);return S.log.filter(l=>l.d===d).length}),mx=Math.max(1,...days);
+ const lv=["A1","A2","B1","B2"].map(v=>{let k=0,n=0;T.forEach((th,t)=>{if(th[0]===v){const p=themeProg(t);k+=p.m;n+=p.n}});return`<div style="margin:8px 0"><b>${v}</b> <span class="mut">${k}/${n} maîtrisés</span><div class="bar"><i style="width:${k/n*100}%"></i></div></div>`}).join("");
+ return`<div class="card"><h2>Salut Noé 👋 Objectif B2 en ${LN[S.lang]}</h2><div class="grid">
+ <div class="stat"><b>🔥 ${streak()}</b><span>jours d’affilée</span></div><div class="stat"><b>${L}</b><span>révisions aujourd’hui</span></div>
+ <div class="stat"><b>${due}</b><span>cartes à revoir</span></div><div class="stat"><b>${tot}</b><span>mots vus</span></div>
+ <div class="stat"><b>${mas}</b><span>mots maîtrisés</span></div><div class="stat"><b>${all?Math.round(ok/all*100):0}%</b><span>réussite</span></div></div>
+ <div style="margin-top:12px"><small class="mut">🎯 Objectif du jour : ${L}/${S.goal} <input type="number" min="5" max="200" value="${S.goal}" onchange="S.goal=+this.value||20;save();render()" style="width:70px;padding:4px"></small><div class="bar"><i style="width:${Math.min(100,L/S.goal*100)}%"></i></div></div><div class="row"><button class="btn" onclick="go('cards')">▶ Réviser maintenant</button></div></div>
+ <div class="card"><h2>📈 Activité (14 derniers jours)</h2><div class="chart">${days.map(n=>`<div title="${n}" style="height:${n/mx*100}%"></div>`).join("")}</div></div>
+ <div class="card"><h2>🎯 Progression par niveau</h2>${lv}</div>${acct()}`},
+cards(){if(!cur)return`<div class="card" style="text-align:center"><div style="font-size:4rem">🎉</div><h2>Rien à réviser !</h2><p class="mut">Reviens plus tard ou débloque un nouveau thème.</p><button class="btn" onclick="go('themes')">Choisir un thème</button></div>`;
+ const[t,w]=cur,x=T[t][3][w],tr=S.lang==="en"?x[2]:x[3];
+ return`<div class="row" style="margin:0 0 8px"><button class="btn g" onclick="S.mode=S.mode==='type'?'flip':'type';save();render()">${S.mode==="type"?"⌨️ Mode saisie":"🃏 Mode retournement"}</button></div><p class="mut" style="text-align:center">${T[t][0]} · ${T[t][1]} · ${Q.length+1} carte(s) restante(s)</p>
+ <div class="card fc" onclick="${S.mode==='type'?'':'flip=!flip;render()'}"><div class="em">${x[4]?`<img src="${x[4]}" alt="" referrerpolicy="no-referrer" onerror="this.outerHTML='${x[0]}'" style="max-height:150px;max-width:100%;border-radius:16px">`:x[0]}</div><div class="w">${x[1]}</div>
+ ${flip?`${S.mode==="type"?`<div>${S.last?"✅ Correct !":"❌ Pas tout à fait"}</div>`:""}<div class="w" style="color:var(--pri)">${tr}</div><button class="btn g" onclick="event.stopPropagation();speak()">🔊 Écouter</button>`:(S.mode==="type"?`<input id="ty" autocomplete="off" placeholder="Écris la traduction…" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter')chk()" style="max-width:320px"><button class="btn" onclick="event.stopPropagation();chk()">Vérifier</button>`:`<small>Touche pour retourner</small>`)}</div>
+ ${flip?`<div class="row"><button class="btn ko" onclick="answer(0)">✗ À revoir</button><button class="btn ok" onclick="answer(1)">✓ Je savais</button></div>`:""}`},
+themes(){const D={A1:"Débutant",A2:"Élémentaire",B1:"Intermédiaire",B2:"Avancé"};return["A1","A2","B1","B2"].map(v=>{const ix=T.map((_,t)=>t).filter(t=>T[t][0]===v);if(!ix.length)return"";
+ return`<div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px"><h2 style="margin:0">${v} <small class="mut">${D[v]}</small></h2><button class="btn g" style="padding:5px 12px" onclick="S.theme=null;S.level='${v}';go('cards')">▶ Réviser tout ${v}</button></div>`+ix.map(t=>{const th=T[t],p=themeProg(t),u=unlocked(t);
+ return`<div class="card th ${u?"":"lock"}" onclick="${u?`S.level=null;S.theme=${t};go('cards')`:""}"><div class="e">${u?th[2]:"🔒"}</div><div style="flex:1"><b>${th[1]}</b>${th[4]?` <span class="tag">perso</span>`:""}<div class="bar" style="margin-top:6px"><i style="width:${p.m/p.n*100}%"></i></div><small class="mut">${u?`${p.k}/${p.n} vus · ${p.m} maîtrisés`:"Vois la moitié du thème précédent pour débloquer"}</small></div></div>`}).join("")}).join("")+`<div class="row"><button class="btn g" onclick="S.theme=null;S.level=null;go('cards')">Mélanger tous les thèmes débloqués</button></div>`},
+agenda(){const n=[...Array(14)].map((_,i)=>{const d=add(i);return Object.entries(S.cards).filter(([k,c])=>k.startsWith(S.lang)&&(i?c.d===d:c.d<=d)).length});
+ const dn=["Di","Lu","Ma","Me","Je","Ve","Sa"];
+ return`<div class="card"><h2>📅 Mon agenda de révisions</h2><p class="mut">Rappels espacés : <b>J0 → J1 → J3 → J7 → J14 → J30</b>. Chaque bonne réponse avance la carte, une erreur la ramène à J0.</p>
+ <div class="days">${n.map((c,i)=>{const d=new Date();d.setDate(d.getDate()+i);return`<div class="day ${i?"":"t"}">${i?dn[d.getDay()]:"Auj."}<br>${d.getDate()}<b>${c}</b></div>`}).join("")}</div></div>
+ <div class="card"><h2>Prochaines étapes</h2>${[["J0","Première vue"],["J1","Lendemain"],["J3","3 jours"],["J7","1 semaine"],["J14","2 semaines"],["J30","1 mois"]].map(([a,b],i)=>{const k=Object.values(S.cards).filter(c=>c.b===i).length;return`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd)"><span><b>${a}</b> · ${b}</span><span class="mut">${k} carte(s)</span></div>`}).join("")}
+ <div class="row"><button class="btn" onclick="go('cards')">Réviser les cartes du jour</button></div></div>`},
+lists(){return`<div class="card"><h2>📋 1. Le prompt prêt à l’emploi</h2><p class="mut">Copie-le, remplace [SUJET], [NIVEAU] et [NOMBRE], colle-le dans Claude (recherche web activée), puis colle sa réponse plus bas.</p><textarea id="pr" readonly rows="8">${PROMPT}</textarea><div class="row"><button class="btn" id="cp" onclick="copyP()">📋 Copier le prompt</button></div></div>
+<div class="card"><h2>📥 2. Importer une liste</h2><textarea id="imp" rows="6" placeholder="Colle ici le JSON…"></textarea><div class="row"><button class="btn" onclick="importList()">Importer</button></div><p id="impo" class="mut"></p>
+<hr style="border:0;border-top:1px solid var(--bd)"><b>Ou laisse l’IA la créer ici (sans images) :</b><input id="sj" placeholder="Sujet (ex : au restaurant)" style="margin:8px 0"><select id="lv2"><option>A1</option><option>A2</option><option selected>B1</option><option>B2</option></select><div class="row"><button class="btn g" onclick="genList()">✨ Générer</button></div></div>
+<div class="card"><h2>📚 Mes listes (${S.custom.length})</h2>${S.custom.map(l=>`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="font-size:1.6rem">${l.emoji}</span><span style="flex:1"><b>${l.name}</b> <span class="tag">${l.level}</span><br><small class="mut">${l.cards.length} cartes · ${l.cards.filter(c=>c.img).length} avec image</small></span><button class="btn g" onclick="S.level=null;S.theme=${T.findIndex(t=>t[4]==="c"+l.id)};go('cards')">▶</button><button class="btn g" onclick="delList(${l.id})">🗑️</button></div>`).join("")||`<p class="mut">Aucune liste pour l’instant.</p>`}</div>`},
+ia(){return`<div class="card"><h2>🤖 Coach IA (${LN[S.lang]})</h2>
+ <label class="mut">Niveau</label><select id="lv"><option>A1</option><option>A2</option><option selected>B1</option><option>B2</option></select>
+ <label class="mut">Thème</label><select id="th">${T.map(t=>`<option>${t[1]}</option>`).join("")}</select>
+ <div class="row"><button class="btn" onclick="ex()">📝 Génère-moi un exercice</button></div><div id="o1"></div></div>
+ <div class="card"><h2>✍️ Corrige ma phrase</h2><textarea id="ph" rows="3" placeholder="Écris une phrase en ${LN[S.lang]}…"></textarea>
+ <div class="row"><button class="btn" onclick="fix()">Corriger & expliquer</button></div><div id="o2"></div></div>
+ <div class="card"><h2>💬 Discute avec ton prof</h2><textarea id="ch" rows="2" placeholder="Pose une question ou parle en ${LN[S.lang]}…"></textarea>
+ <div class="row"><button class="btn" onclick="chat()">Envoyer</button></div><div id="o3"></div></div>`}};
+async function ask(prompt,out){const o=$(out);
+ if(!sample){o.innerHTML=`<div class="ai">L’IA n’est pas disponible ici (ouvre l’app depuis claude.ai).</div>`;return}
+ o.innerHTML=`<div class="ai" id="${out}t">Réflexion…</div>`;
+ try{await sample(prompt,{onText:({text})=>{$(out+"t").textContent=text},cache:false})}
+ catch(e){$(out+"t").textContent=e.code==="not_granted"?"Autorisation refusée.":"Oups, réessaie dans un instant."}}
+const SYS=()=>`Tu es un prof d’${LN[S.lang]} bienveillant pour un francophone (objectif B2). Explique en français, cible en ${LN[S.lang]}. Sois concis. `;
+const ex=()=>ask(SYS()+`Crée 5 exercices à trous niveau ${$("lv").value} sur le thème « ${$("th").value} », puis les corrigés à la fin sous « Corrigés ».`,"o1");
+const fix=()=>ask(SYS()+`Corrige cette phrase, donne la version corrigée puis explique les erreurs en 2-3 points : ${$("ph").value}`,"o2");
+const chat=()=>ask(SYS()+`Réponds à l’élève (corrige gentiment ses fautes) : ${$("ch").value}`,"o3");
+function render(){$("l-en").className=S.lang==="en"?"on":"";$("l-de").className=S.lang==="de"?"on":"";
+ $("nav").innerHTML=[["home","🏠","Accueil"],["cards","🃏","Cartes"],["themes","🧩","Thèmes"],["agenda","📅","Agenda"],["lists","📚","Mes listes"],["ia","🤖","Coach IA"]].map(([k,e,n])=>`<button class="${S.tab===k?"on":""}" onclick="go('${k}')"><b>${e}</b>${n}</button>`).join("");
+ $("v").innerHTML=views[S.tab]();const ty=$("ty");if(ty)ty.focus()}
+build();render();
+(async()=>{try{sample=await claude.use("sample")}catch(e){}
+ if(!sample)sample=async(p,o)=>{const r=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:p})});if(!r.ok)throw{code:"err"};const t=(await r.json()).text;if(o&&o.onText)o.onText({text:t});return{text:t}};
+ initAuth()})();
+</script></body></html>
